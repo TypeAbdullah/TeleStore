@@ -1,0 +1,39 @@
+name = "telestore"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# ── D1 Main Database ──────────────────────────────────────────────────────────
+# Run: wrangler d1 create telestore-main
+# Then paste the output database_id below
+[[d1_databases]]
+binding = "DB"                          # accessed as env.DB in worker
+database_name = "telestore-main"
+database_id = "YOUR_D1_MAIN_ID_HERE"   # ← replace this
+
+# ── D1 Backup Database (optional) ────────────────────────────────────────────
+# Run: wrangler d1 create telestore-backup
+# Comment this entire block out if you don't want a backup DB
+[[d1_databases]]
+binding = "DB_BACKUP"                       # accessed as env.DB_BACKUP in worker
+database_name = "telestore-backup"
+database_id = "YOUR_D1_BACKUP_ID_HERE"     # ← replace this
+
+# ── D1 Second Backup Database (optional) ─────────────────────────────────────
+# Run: wrangler d1 create telestore-backup2
+# Comment this entire block out if you don't need a second backup DB
+[[d1_databases]]
+binding = "DB_BACKUP2"                      # accessed as env.DB_BACKUP2 in worker
+database_name = "telestore-backup2"
+database_id = "YOUR_D1_BACKUP2_ID_HERE"    # ← replace this
+
+# ── Environment Variables (non-secret, safe to commit) ───────────────────────
+[vars]
+BASE_URL          = "https://telestore.YOUR_SUBDOMAIN.workers.dev"
+MAX_FILE_SIZE_MB  = "20"
+ENABLE_DASHBOARD  = "true"   # set to "false" to disable the frontend UI entirely
+
+# ── Secrets (run these commands — never commit actual values) ─────────────────
+# wrangler secret put TELEGRAM_BOT_TOKEN
+# wrangler secret put TELEGRAM_CHANNEL_ID
+# wrangler secret put TELEGRAM_BACKUP_CHANNELS   # comma-separated, e.g. "-100aaa,-100bbb"
+# wrangler secret put API_KEY
